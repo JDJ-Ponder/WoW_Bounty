@@ -1,0 +1,377 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ── WoW Classic+ Bounty Board Design System ── */
+
+@theme {
+  /* Core palette */
+  --color-parchment: #f5e6c8;
+  --color-parchment-dark: #d4c4a0;
+  --color-charcoal: #1a1a2e;
+  --color-charcoal-light: #222240;
+  --color-charcoal-deep: #0f0f1e;
+  --color-obsidian: #16162a;
+  --color-gold: #ffd700;
+  --color-gold-dark: #b8860b;
+  --color-gold-light: #ffe55c;
+  
+  /* Faction colors */
+  --color-alliance: #1e40af;
+  --color-alliance-light: #3b82f6;
+  --color-alliance-glow: #60a5fa;
+  --color-horde: #991b1b;
+  --color-horde-light: #ef4444;
+  --color-horde-glow: #f87171;
+
+  /* Status colors */
+  --color-active: #22c55e;
+  --color-claimed: #f59e0b;
+  --color-disputed: #ef4444;
+  --color-expired: #6b7280;
+
+  /* Spacing & sizing */
+  --radius-card: 0.75rem;
+  --radius-modal: 1rem;
+  
+  /* Shadows */
+  --shadow-glow-alliance: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 60px rgba(59, 130, 246, 0.15);
+  --shadow-glow-horde: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 60px rgba(239, 68, 68, 0.15);
+  --shadow-glow-gold: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.15);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 215, 0, 0.1);
+  --shadow-modal: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--color-charcoal-deep);
+  color: var(--color-parchment);
+  overflow-x: hidden;
+}
+
+/* ── Typography ── */
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-cinzel-decorative {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+/* ── Parchment Texture Overlay ── */
+.parchment-bg {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 230, 200, 0.03) 0%,
+    rgba(245, 230, 200, 0.01) 50%,
+    rgba(245, 230, 200, 0.04) 100%
+  );
+}
+
+.parchment-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(245, 230, 200, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(245, 230, 200, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Faction Glow Effects ── */
+.glow-alliance {
+  box-shadow: var(--shadow-glow-alliance);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.glow-horde {
+  box-shadow: var(--shadow-glow-horde);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.glow-gold {
+  box-shadow: var(--shadow-glow-gold);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* ── Card Styles ── */
+.bounty-card {
+  background: linear-gradient(
+    145deg,
+    rgba(22, 22, 42, 0.95) 0%,
+    rgba(26, 26, 46, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+}
+
+.bounty-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 215, 0, 0.3);
+  box-shadow: var(--shadow-card), 0 0 30px rgba(255, 215, 0, 0.1);
+}
+
+.bounty-card.alliance:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: var(--shadow-card), var(--shadow-glow-alliance);
+}
+
+.bounty-card.horde:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: var(--shadow-card), var(--shadow-glow-horde);
+}
+
+/* ── Gothic Border Decorations ── */
+.gothic-border {
+  position: relative;
+}
+
+.gothic-border::before,
+.gothic-border::after {
+  content: '⚔';
+  position: absolute;
+  font-size: 1.25rem;
+  color: var(--color-gold-dark);
+  opacity: 0.6;
+}
+
+.gothic-border::before {
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gothic-border::after {
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-gold-dark), rgba(184, 134, 11, 0.4));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-gold), var(--color-gold-dark));
+}
+
+/* ── Animations ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-ticker {
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* ── Glass Morphism ── */
+.glass {
+  background: rgba(22, 22, 42, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 215, 0, 0.08);
+}
+
+.glass-dark {
+  background: rgba(15, 15, 30, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Modal Overlay ── */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: linear-gradient(
+    160deg,
+    rgba(22, 22, 42, 0.98) 0%,
+    rgba(26, 26, 46, 0.95) 100%
+  );
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+}
+
+/* ── Escrow badge ── */
+.escrow-badge {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(184, 134, 11, 0.1));
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: var(--color-gold);
+}
+
+/* ── Status indicators ── */
+.status-active {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.status-claimed {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.status-disputed {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+/* ── Faction crest backgrounds ── */
+.faction-crest-alliance {
+  background: radial-gradient(circle at center, rgba(30, 64, 175, 0.2) 0%, transparent 70%);
+}
+
+.faction-crest-horde {
+  background: radial-gradient(circle at center, rgba(153, 27, 27, 0.2) 0%, transparent 70%);
+}
+
+/* ── Input styling ── */
+input, select, textarea {
+  background: rgba(15, 15, 30, 0.8);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: var(--color-parchment);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-gold-dark);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(245, 230, 200, 0.35);
+}
+
+/* ── Button base ── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold));
+  color: var(--color-charcoal-deep);
+  font-weight: 700;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--color-gold);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: var(--color-gold);
+}
+
+/* ── Ticker bar ── */
+.ticker-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 15, 30, 0.95),
+    rgba(22, 22, 42, 0.9),
+    rgba(15, 15, 30, 0.95)
+  );
+  border-top: 1px solid rgba(255, 215, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+/* ── Divider ── */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 0, 0.3),
+    transparent
+  );
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(255, 215, 0, 0.3);
+  color: white;
+}
