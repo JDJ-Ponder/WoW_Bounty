@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { Skull, Target, Crown, Coins, Users, TrendingUp } from 'lucide-react';
+import { Skull, Target, Crown, Coins, Users, TrendingUp, Shield } from 'lucide-react';
 import FactionCrest from './FactionCrest';
 import { formatGold } from '../utils/api';
 
-export default function HeroSection({ stats, onPostBounty, onOpenGithub }) {
+export default function HeroSection({ stats, onPostBounty, onOpenGithub, onOpenAddon }) {
   return (
     <header className="relative overflow-hidden">
       {/* Deep background layers */}
@@ -95,6 +95,19 @@ export default function HeroSection({ stats, onPostBounty, onOpenGithub }) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.55 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onOpenAddon}
+              className="btn-secondary text-base px-6 py-3 flex items-center gap-2"
+            >
+              <Shield size={18} className="text-gold" />
+              In-Game WoW Addon
+            </motion.button>
+
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onOpenGithub}

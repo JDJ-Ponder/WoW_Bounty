@@ -7,8 +7,9 @@ import ActivityFeed from './components/ActivityFeed';
 import PostBountyModal from './components/PostBountyModal';
 import ClaimProofModal from './components/ClaimProofModal';
 import GithubModal from './components/GithubModal';
+import AddonModal from './components/AddonModal';
 import { useBounties } from './hooks/useBounties';
-import { Skull, GitBranch } from 'lucide-react';
+import { Skull, GitBranch, Shield } from 'lucide-react';
 
 export default function App() {
   const {
@@ -25,10 +26,10 @@ export default function App() {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showProofModal, setShowProofModal] = useState(false);
   const [showGithubModal, setShowGithubModal] = useState(false);
+  const [showAddonModal, setShowAddonModal] = useState(false);
   const [selectedBounty, setSelectedBounty] = useState(null);
 
   const handleAcceptBounty = (bounty) => {
-    // In production this would open a claim flow — for now, instant claim
     const hunterName = prompt('Enter your character name to accept this contract:');
     if (hunterName) {
       claimBounty(bounty.id, {
@@ -55,6 +56,7 @@ export default function App() {
         stats={stats} 
         onPostBounty={() => setShowPostModal(true)} 
         onOpenGithub={() => setShowGithubModal(true)}
+        onOpenAddon={() => setShowAddonModal(true)}
       />
 
       {/* Live Stats Ticker */}
@@ -108,6 +110,13 @@ export default function App() {
                 </span>
               </div>
               <button
+                onClick={() => setShowAddonModal(true)}
+                className="text-xs text-gold/60 hover:text-gold flex items-center gap-1.5 transition-colors bg-gold/5 hover:bg-gold/10 px-2.5 py-1 rounded-lg border border-gold/20"
+              >
+                <Shield size={12} />
+                <span>In-Game WoW Addon</span>
+              </button>
+              <button
                 onClick={() => setShowGithubModal(true)}
                 className="text-xs text-gold/60 hover:text-gold flex items-center gap-1.5 transition-colors bg-gold/5 hover:bg-gold/10 px-2.5 py-1 rounded-lg border border-gold/20"
               >
@@ -139,6 +148,10 @@ export default function App() {
         isOpen={showGithubModal}
         onClose={() => setShowGithubModal(false)}
         bounties={bounties}
+      />
+      <AddonModal
+        isOpen={showAddonModal}
+        onClose={() => setShowAddonModal(false)}
       />
     </div>
   );

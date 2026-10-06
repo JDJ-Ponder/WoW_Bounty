@@ -1,0 +1,11 @@
+## Title: Classic+ Bounty Board
+## Notes: In-game cross-faction PvP bounty board and gold escrow tracker for WoW Classic+.
+## Author: Antigravity WoW Team
+## Version: 1.0.0
+## Interface: 11503
+## SavedVariables: ClassicBountyBoardDB
+
+ClassicBountyBoard.lua
+EscrowEngine.lua
+Sync.lua
+UI.lua
