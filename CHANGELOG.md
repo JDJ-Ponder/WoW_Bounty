@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-10-14
+
+### ⚔️ Optimized for WoW Forever: P2P Mesh Network, Tooltip Hooks & World Map Intel
+
+#### 🗡 In-Game World of Warcraft Addon (`addon/ClassicBountyBoard`)
+- **P2P Mesh Network Synchronization (`Sync.lua`)**:
+  - Communicates over hidden in-game chat prefix (`CBB_P2P`) using party, raid, guild, and custom channel (`BountyNet`).
+  - Automatic peer-to-peer distribution of newly verified escrow contracts and kill confirmation events.
+- **Native Blizzard GameTooltip Integration (`UI.lua`)**:
+  - Automatically appends wanted contract badge, escrow status, and reward amounts directly onto unit tooltips when hovering over enemy players.
+- **Audio Cue System (`UI.lua`)**:
+  - Plays an ominous target acquisition audio sting (`PlaySound(8457)`) upon targeting an active wanted player (throttled to avoid spam).
+- **World Map Hunter Pins & Sightings Overlay (`UI.lua`)**:
+  - Transmits player coordinates (`C_Map.GetPlayerMapPosition`) upon spotting bounties in the world.
+  - Renders interactive skull pins on the World Map showing target name, bounty gold, spotting player, and timestamp.
+- **Performance Optimizations (`EscrowEngine.lua`)**:
+  - Sub-event early return short-circuits 99.9% of combat log events.
+  - $O(1)$ fast hash cache table for instant target verification.
+
+---
+
+## [1.2.0] - 2026-10-14
+
+### 🚀 Lightweight UI & Target HUD Widget
+
+- **Floating Target HUD (`UI.lua`)**: Minimalist 220x48px wanted indicator that activates only when targeting a wanted player.
+- **Compact Main Frame (`UI.lua`)**: Replaced heavy frames with a 400x420px responsive tabbed frame.
+- **Enhanced Slash Commands (`ClassicBountyBoard.lua`)**: Added `/bb hud`, `/bb map`, `/bb post`, `/bb list`.
+
+---
+
 ## [1.1.0] - 2026-10-06
 
 ### 🛡 Added In-Game WoW Companion Addon & Gold Escrow Suite
