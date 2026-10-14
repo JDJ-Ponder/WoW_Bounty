@@ -98,6 +98,11 @@ function CBB.Escrow.OnTradeComplete()
                 CBB.RebuildBountyCache()
                 if CBB.SyncData then CBB.SyncData() end
 
+                -- Broadcast new verified bounty over P2P mesh network!
+                if CBB.Network and CBB.Network.BroadcastBounty then
+                    CBB.Network.BroadcastBounty(pending)
+                end
+
                 CBB.Print("⚔️ |cff22c55e[ESCROW LOCKED]|r Bounty " .. pending.id .. " (" .. pending.reward .. "g) on |cffff4444" .. pending.target .. "|r is now LIVE!")
                 PlaySound(888) -- Quest complete sound
                 return
@@ -134,6 +139,11 @@ function CBB.OnCombatLogEvent(...)
 
         -- Remove from active cache
         CBB.bountyCache[targetKey] = nil
+
+        -- Broadcast kill confirmation over P2P mesh
+        if CBB.Network and CBB.Network.BroadcastKill then
+            CBB.Network.BroadcastKill(destName, killer, bounty.reward, bounty.id)
+        end
 
         CBB.Print("💀 |cffffd700[KILL CONFIRMED]|r Target |cffff4444" .. destName .. "|r slain by |cff60a5fa" .. killer .. "|r!")
         CBB.Print("Escrow Reward |cffffd700" .. bounty.reward .. " Gold|r is queued for payout to killer!")

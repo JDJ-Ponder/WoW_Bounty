@@ -7,7 +7,7 @@
 local addonName, CBB = ...
 _G["ClassicBountyBoard"] = CBB
 
-CBB.version = "1.2.0"
+CBB.version = "1.3.0"
 CBB.defaults = {
     escrowBanker = "BountyEscrow",
     autoTargetCapture = true,
@@ -18,10 +18,11 @@ CBB.defaults = {
     bounties = {},
     pendingEscrow = {},
     verifiedEscrow = {},
+    sightings = {},
     activityLog = {},
 }
 
--- Fast lookup table for O(1) target bounty detection in combat log & targeting
+-- Fast lookup table for O(1) target bounty detection
 CBB.bountyCache = {}
 
 function CBB.RebuildBountyCache()
@@ -58,7 +59,7 @@ function CBB.Print(msg)
     DEFAULT_CHAT_FRAME:AddMessage("|cffffd700[BountyBoard]|r " .. tostring(msg))
 end
 
--- Slash Commands: quick, non-intrusive toggles
+-- Slash Commands
 SLASH_CLASSICBOUNTYBOARD1 = "/bounty"
 SLASH_CLASSICBOUNTYBOARD2 = "/bb"
 SlashCmdList["CLASSICBOUNTYBOARD"] = function(msg)
@@ -87,6 +88,11 @@ SlashCmdList["CLASSICBOUNTYBOARD"] = function(msg)
             CBB.UI.ToggleMainFrame(true)
             CBB.UI.SetTab("list")
         end
+    elseif cmd == "map" then
+        if CBB.UI and CBB.UI.UpdateMapPin then
+            CBB.UI.UpdateMapPin(true)
+            CBB.Print("Refreshed bounty hunter map pins.")
+        end
     elseif cmd == "target" then
         CBB.UI.CaptureTarget()
         CBB.Print("Captured target: " .. (CBB.currentTarget and CBB.currentTarget.name or "None"))
@@ -98,7 +104,8 @@ SlashCmdList["CLASSICBOUNTYBOARD"] = function(msg)
         CBB.Print("  /bb post - Open posting form with current target")
         CBB.Print("  /bb hud - Toggle lightweight floating Target HUD")
         CBB.Print("  /bb list - View active contracts & escrow status")
-        CBB.Print("  /bb sync - Refresh SavedVariables export for web companion")
+        CBB.Print("  /bb map - Refresh World Map pins for sighted bounties")
+        CBB.Print("  /bb sync - Refresh SavedVariables export")
     end
 end
 
@@ -107,7 +114,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
         local loadedAddon = ...
         if loadedAddon == addonName then
             InitDB()
-            CBB.Print("Loaded v" .. CBB.version .. ". Type |cffffd700/bb|r to open.")
+            CBB.Print("Loaded v" .. CBB.version .. " (P2P Mesh + Map Tracking). Type |cffffd700/bb|r to open.")
         end
     elseif event == "PLAYER_LOGIN" then
         if CBB.InitUI then
@@ -116,7 +123,11 @@ frame:SetScript("OnEvent", function(self, event, ...)
         if CBB.InitEscrow then
             CBB.InitEscrow()
         end
-        -- Auto-add a demo/starter contract if DB is fresh so the UI isn't bare
+        if CBB.Network and CBB.Network.Init then
+            CBB.Network.Init()
+        end
+
+        -- Seed starter sample bounties if DB is completely fresh
         if #CBB.db.bounties == 0 then
             table.insert(CBB.db.bounties, {
                 id = "IGB-DEMO-01",
@@ -126,6 +137,18 @@ frame:SetScript("OnEvent", function(self, event, ...)
                 targetFaction = (UnitFactionGroup("player") == "Alliance") and "Horde" or "Alliance",
                 reward = 120,
                 reason = "Camped Redridge Flight Master",
+                status = "VERIFIED_IN_ESCROW",
+                verified = true,
+                createdAt = time()
+            })
+            table.insert(CBB.db.bounties, {
+                id = "IGB-DEMO-02",
+                poster = "IronforgeGuard",
+                target = "Shadowrogue",
+                targetRealm = GetRealmName(),
+                targetFaction = (UnitFactionGroup("player") == "Alliance") and "Horde" or "Alliance",
+                reward = 250,
+                reason = "Ganking lowbies in Southshore",
                 status = "VERIFIED_IN_ESCROW",
                 verified = true,
                 createdAt = time()
@@ -147,3 +170,22 @@ frame:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end)
+
+-- Legacy bridge sync generator
+function CBB.SyncData()
+    if not ClassicBountyBoardDB then return end
+    local exportTable = {
+        addon = "ClassicBountyBoard",
+        version = CBB.version,
+        realm = GetRealmName(),
+        player = UnitName("player"),
+        faction = UnitFactionGroup("player"),
+        timestamp = time(),
+        bounties = ClassicBountyBoardDB.bounties or {},
+        pendingEscrow = ClassicBountyBoardDB.pendingEscrow or {},
+        verifiedEscrow = ClassicBountyBoardDB.verifiedEscrow or {},
+        sightings = ClassicBountyBoardDB.sightings or {},
+    }
+    ClassicBountyBoardDB.lastSyncExport = exportTable
+    CBB.Print("Sync data exported to SavedVariables for Web Companion.")
+end
