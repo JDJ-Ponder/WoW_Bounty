@@ -1,7 +1,7 @@
 ## Title: Classic+ Bounty Board
-## Notes: In-game cross-faction PvP bounty board and gold escrow tracker for WoW Classic+.
+## Notes: Ultra-lightweight PvP bounty contracts, target hud, and gold escrow tracker for WoW Forever / Classic+.
 ## Author: Antigravity WoW Team
-## Version: 1.0.0
+## Version: 1.2.0
 ## Interface: 11503
 ## SavedVariables: ClassicBountyBoardDB
 
